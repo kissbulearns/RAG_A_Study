@@ -10,35 +10,35 @@
   --bg-secondary: #12121a;
   --bg-card: rgba(255, 255, 255, 0.03);
   --bg-card-hover: rgba(255, 255, 255, 0.06);
-  
+
   --text-primary: #f0f0f5;
   --text-secondary: #a0a0b0;
   --text-muted: #6a6a7a;
-  
+
   --accent-primary: #8b5cf6;
   --accent-secondary: #6366f1;
   --accent-tertiary: #06b6d4;
-  
+
   --gradient-primary: linear-gradient(135deg, #8b5cf6, #6366f1, #06b6d4);
   --gradient-bg: linear-gradient(180deg, #0a0a0f 0%, #12121a 50%, #0a0a0f 100%);
-  
+
   --border-color: rgba(255, 255, 255, 0.1);
   --border-glow: rgba(139, 92, 246, 0.3);
-  
+
   /* Shadows */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
   --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.15);
-  
+
   /* Typography */
   --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
-  
+
   /* Spacing */
   --content-width: 800px;
   --wide-width: 1200px;
-  
+
   /* Transitions */
   --transition-fast: 0.15s ease;
   --transition-normal: 0.3s ease;
@@ -46,7 +46,9 @@
 }
 
 /* Reset & Base */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -83,7 +85,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: 
+  background-image:
     linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   background-size: 50px 50px;
@@ -116,7 +118,12 @@ body {
 }
 
 /* Typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 700;
   line-height: 1.3;
   color: var(--text-primary);
@@ -170,7 +177,8 @@ strong {
 }
 
 /* Lists */
-ul, ol {
+ul,
+ol {
   margin: 1rem 0 1.5rem 1.5rem;
   color: var(--text-secondary);
 }
@@ -300,7 +308,8 @@ table {
   font-size: 0.9rem;
 }
 
-th, td {
+th,
+td {
   padding: 0.75rem 1rem;
   text-align: left;
   border-bottom: 1px solid var(--border-color);
@@ -522,13 +531,14 @@ tr:hover td {
 
 /* Table of Contents */
 .toc {
-  position: sticky;
-  top: 90px;
+  position: relative;
   padding: 1.5rem;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  max-height: none;
+  overflow: visible;
 }
 
 .toc h4 {
@@ -537,12 +547,33 @@ tr:hover td {
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toc h4::after {
+  content: "▼";
+  font-size: 0.7rem;
+  transition: transform var(--transition-fast);
+}
+
+.toc.collapsed h4::after {
+  transform: rotate(-90deg);
+}
+
+.toc.collapsed .toc-list {
+  display: none;
 }
 
 .toc-list {
   list-style: none;
   margin: 0;
   padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 0.25rem 2rem;
 }
 
 .toc-list li {
@@ -551,12 +582,11 @@ tr:hover td {
 
 .toc-list a {
   display: block;
-  padding: 0.5rem 0;
+  padding: 0.4rem 0;
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   border-left: 2px solid transparent;
-  padding-left: 1rem;
-  margin-left: -1rem;
+  padding-left: 0.75rem;
   transition: all var(--transition-fast);
 }
 
@@ -568,8 +598,15 @@ tr:hover td {
 }
 
 .toc-list .toc-h3 {
-  padding-left: 2rem;
-  font-size: 0.85rem;
+  padding-left: 1.5rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+  .toc-list {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Diagrams */
@@ -660,7 +697,7 @@ tr:hover td {
   margin-bottom: 1rem;
 }
 
-.comparison-header > div {
+.comparison-header>div {
   padding: 1rem;
   text-align: center;
   font-weight: 600;
@@ -675,7 +712,7 @@ tr:hover td {
   margin-bottom: 0.75rem;
 }
 
-.comparison-row > div {
+.comparison-row>div {
   padding: 1rem;
   background: var(--bg-card);
   border-radius: 8px;
@@ -761,59 +798,59 @@ tr:hover td {
   html {
     font-size: 15px;
   }
-  
+
   .container {
     padding: 0 1.25rem;
   }
-  
+
   h1 {
     font-size: 2.25rem;
   }
-  
+
   h2 {
     font-size: 1.5rem;
   }
-  
+
   .hero h1 {
     font-size: 2.5rem;
   }
-  
+
   .article-header h1 {
     font-size: 2rem;
   }
-  
+
   .header-content {
     height: 60px;
   }
-  
+
   .nav-links {
     gap: 1rem;
   }
-  
+
   .article-header {
     padding: 6rem 0 2rem;
   }
-  
+
   .article-header-meta {
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .fp-grid,
   .solutions-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .comparison-header,
   .comparison-row {
     grid-template-columns: 1fr;
   }
-  
+
   pre {
     padding: 1rem;
     font-size: 0.8rem;
   }
-  
+
   table {
     display: block;
     overflow-x: auto;
@@ -826,6 +863,7 @@ tr:hover td {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -836,12 +874,24 @@ tr:hover td {
   animation: fadeIn 0.6s ease forwards;
 }
 
-.fade-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
-.fade-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
-.fade-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
+.fade-in-delay-1 {
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+
+.fade-in-delay-2 {
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+
+.fade-in-delay-3 {
+  animation-delay: 0.3s;
+  opacity: 0;
+}
 
 /* Print Styles */
 @media print {
+
   .site-header,
   .reading-progress,
   .toc,
@@ -850,12 +900,12 @@ tr:hover td {
   .bg-orb {
     display: none;
   }
-  
+
   body {
     background: white;
     color: black;
   }
-  
+
   .article-content {
     padding-top: 0;
   }

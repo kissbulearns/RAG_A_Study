@@ -23,21 +23,23 @@ function initReadingProgress() {
     const articleTop = window.scrollY + articleRect.top;
     const articleHeight = article.offsetHeight;
     const windowHeight = window.innerHeight;
-    
+
     const scrollPosition = window.scrollY - articleTop + windowHeight;
     const progress = Math.min(Math.max(scrollPosition / articleHeight * 100, 0), 100);
-    
+
     progressBar.style.width = `${progress}%`;
   });
 }
 
 // Table of Contents
 function initTableOfContents() {
-  const toc = document.querySelector('.toc-list');
-  if (!toc) return;
+  const toc = document.querySelector('.toc');
+  const tocList = document.querySelector('.toc-list');
+  if (!toc || !tocList) return;
 
-  const headings = document.querySelectorAll('.article-content h2, .article-content h3');
-  
+  // Only include h2 headings (main sections) to keep TOC cleaner
+  const headings = document.querySelectorAll('.article-content h2');
+
   headings.forEach((heading, index) => {
     // Add ID if not exists
     if (!heading.id) {
@@ -48,19 +50,26 @@ function initTableOfContents() {
     const a = document.createElement('a');
     a.href = `#${heading.id}`;
     a.textContent = heading.textContent;
-    a.className = `toc-${heading.tagName.toLowerCase()}`;
     li.appendChild(a);
-    toc.appendChild(li);
+    tocList.appendChild(li);
   });
 
-  // Highlight active section
-  const tocLinks = toc.querySelectorAll('a');
-  
+  // Add toggle functionality
+  const tocHeader = toc.querySelector('h4');
+  if (tocHeader) {
+    tocHeader.addEventListener('click', () => {
+      toc.classList.toggle('collapsed');
+    });
+  }
+
+  // Highlight active section on scroll
+  const tocLinks = tocList.querySelectorAll('a');
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         tocLinks.forEach(link => link.classList.remove('active'));
-        const activeLink = toc.querySelector(`a[href="#${entry.target.id}"]`);
+        const activeLink = tocList.querySelector(`a[href="#${entry.target.id}"]`);
         if (activeLink) {
           activeLink.classList.add('active');
         }
@@ -74,13 +83,13 @@ function initTableOfContents() {
 // Copy Code Buttons
 function initCopyButtons() {
   const codeBlocks = document.querySelectorAll('pre code');
-  
+
   codeBlocks.forEach(code => {
     const pre = code.parentElement;
     const header = pre.querySelector('.code-header');
-    
+
     if (!header) return;
-    
+
     const copyBtn = header.querySelector('.copy-btn');
     if (!copyBtn) return;
 
@@ -89,7 +98,7 @@ function initCopyButtons() {
         await navigator.clipboard.writeText(code.textContent);
         copyBtn.textContent = 'Copied!';
         copyBtn.style.color = '#22c55e';
-        
+
         setTimeout(() => {
           copyBtn.textContent = 'Copy';
           copyBtn.style.color = '';
@@ -108,7 +117,7 @@ function initCopyButtons() {
 // Smooth Scroll for Anchor Links
 function initSmoothScroll() {
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
+    anchor.addEventListener('click', function (e) {
       e.preventDefault();
       const target = document.querySelector(this.getAttribute('href'));
       if (target) {
