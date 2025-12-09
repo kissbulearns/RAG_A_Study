@@ -5,10 +5,38 @@
 document.addEventListener('DOMContentLoaded', () => {
   initReadingProgress();
   initTableOfContents();
+  initBackToTocLinks();
   initCopyButtons();
   initSmoothScroll();
   initFadeInAnimations();
 });
+
+// Add "Back to Table of Contents" links after each h2 section
+function initBackToTocLinks() {
+  const toc = document.getElementById('toc');
+  if (!toc) return;
+
+  const h2Headings = document.querySelectorAll('.article-content h2');
+
+  h2Headings.forEach((heading, index) => {
+    // Skip the last heading (References) and first heading
+    if (index === 0 || heading.id === 'references') return;
+
+    // Find the next h2 or end of content
+    const nextH2 = h2Headings[index + 1];
+
+    // Create back-to-toc link
+    const backLink = document.createElement('a');
+    backLink.href = '#toc';
+    backLink.className = 'back-to-toc';
+    backLink.textContent = 'Back to Table of Contents';
+
+    // Insert before the next h2, or at end of section
+    if (nextH2) {
+      nextH2.parentNode.insertBefore(backLink, nextH2);
+    }
+  });
+}
 
 // Reading Progress Bar
 function initReadingProgress() {
